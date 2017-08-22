@@ -7,8 +7,11 @@ class Request():
         self.workspace_api = workspace_api
         self.cbroker = cbroker
 
-    def sendPostRequest(self):
-        return True
+    def sendPostRequest(self, header, data, domain):
+        r = requests.post(url=domain, headers=header, data=data)
+        if r.text:
+            return r.text
+        return False
 
-    def sendGetRequest(self):
+    def sendGetRequest(self, header, domain):
         return True
