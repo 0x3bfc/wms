@@ -6,7 +6,7 @@ from .forms import *
 from .models import *
 from wms import settings
 from .fiware import fiware
-import random , string
+import random , string, json
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def registerService(request):
@@ -153,3 +153,10 @@ def device(request):
         results = paginator.page(paginator.num_pages)
     values = {'results':results}
     return render_to_response("RFID.html", values, context_instance=RequestContext(request))
+
+
+def testAPI(request):
+    service = Service.objects.get(apikey='8lk89m0v5hqpxfpcolis')
+    workspaces = WorkSpace.objects.get(entity_name='DownTown')
+    fiware_obj = fiware.Fiware(settings.service_api, settings.workspace_api, settings.cbroker)
+    raise Exception(fiware_obj.updateWorkspaceData('admin', workspaces.entity_name, '8lk89m0v5hqpxfpcolis', 'jr391lb9711ah134z1sq', type='decrement'))

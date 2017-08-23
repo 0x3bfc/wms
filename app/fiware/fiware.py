@@ -100,3 +100,44 @@ class Fiware():
                             'current': currentstatus
                     })
         return wss
+
+
+    def updateWorkspaceData(self, service, ws_name, apikey, device_id, type='increment'):
+
+        #try:
+        header = {
+                        "Content-type": "application/json",
+                        "Fiware-Service": service
+                    }
+        data = '{"entities": [{"type": "","id": "%s","isPattern": "false"}],"attributes": [ "currentstatus","maximumnumber" ]}'%(ws_name)
+
+        r = self.requester.sendPostRequest(header, data, settings.ngsi_api)
+
+        output = json.loads(r)
+        currentstatus = 0
+        maximumnumber = 0
+        for attr in  output['contextResponses'][0]['contextElement']['attributes']:
+            if 'currentstatus' in attr['name']:
+                currentstatus = attr['value']
+            if 'maximumnumber' in attr['name']:
+                maximumnumber = attr['value']
+
+        if maximumnumber:
+            #update current status
+            # curl "http://130.206.126.55:7896/iot/d?k=4jggokgpepnvsb2uv4s40d0000&i=112255" -d 'cur|38' -H "Content-type: text/plain"
+            header = {"Content-type": "text/plain"}
+            if type == 'increment':
+                currentstatus = int(currentstatus) + 1
+                if currentstatus >= int(maximumnumber):
+                    currentstatus = int(maximumnumber)
+                data = 'currentstatus|%d'%(int(currentstatus))
+            else:
+                currentstatus = int(currentstatus) - 1
+                data = 'currentstatus|%d' % (currentstatus)
+                if currentstatus <=0:
+                    data = 'currentstatus|0'
+            domain = '%s?k=%s&i=%s'%(settings.device_api, apikey, device_id)
+
+            self.requester.sendPostRequest(header, data, domain)
+        return ({'maximumnumber': maximumnumber,
+                 'currentstatus':currentstatus})

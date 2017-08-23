@@ -112,7 +112,7 @@ color: #04A3ED;
         <small><strong>Occupied:</strong> {{ d.current }}</small>
     <br><hr>
     <div class="text-center">
-        {% if d.maxsize == d.current %}
+        {% if d.maxsize <= d.current %}
             <a class="btn btn-danger" disabled="true" href="#successModal" data-toggle="modal">Full Capacity</a>
         {% else %}
         <a class="btn btn-success" href="#successModal" data-toggle="modal"><i class="glyphicon glyphicon-eye-open"></i> Show Map</a>
