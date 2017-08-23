@@ -1,6 +1,10 @@
 # wms
 Workspace Management System using FIWARE
 
+## Basic Architecture
+
+![Alt text](imgs/FiWareWMS.png "Basic Architecture")
+
 ## Installation Requirments
 
 ```
