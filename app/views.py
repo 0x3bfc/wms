@@ -9,6 +9,7 @@ from .fiware import fiware
 import random , string, json
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
+
 def registerService(request):
     values = {}
     if request.method == 'GET':
@@ -160,3 +161,10 @@ def testAPI(request):
     workspaces = WorkSpace.objects.get(entity_name='DownTown')
     fiware_obj = fiware.Fiware(settings.service_api, settings.workspace_api, settings.cbroker)
     raise Exception(fiware_obj.updateWorkspaceData('admin', workspaces.entity_name, '8lk89m0v5hqpxfpcolis', 'jr391lb9711ah134z1sq', type='decrement'))
+
+
+
+
+
+
+

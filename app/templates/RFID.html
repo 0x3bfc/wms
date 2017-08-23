@@ -73,7 +73,26 @@ color: #04A3ED;
 
     </style>
 
+<script>
 
+    function callUpdate(apikey, devid, increment) {
+        $.ajax({
+                    type: 'GET',
+                    url: '/api/update/?apikey='+apikey+'&devid='+devid+'&type='+ increment,
+                    dataType: 'json',
+                    contentType: 'application/json; charset=utf-8',
+                    success: function (response) {
+
+                        alert(response.status)
+                    },
+                    error: function (error) {
+                        //alert(error);
+                        console.log(error);
+                    }
+                });
+
+    }
+</script>
 
 <div class="row">
 <div class="menu">
@@ -115,9 +134,9 @@ color: #04A3ED;
     <td>{{ result.workspace }}</td>
     <td>{{ result.address }}</td>
     <td>{{ result.maxsize }}</td>
-    <td><button type="button" class="btn btn-success btn-sm" onclick="Increase({{ result.apikey }}, {{ result.device_id }})">
+    <td><button type="button" class="btn btn-success btn-sm" onclick="callUpdate('{{ result.apikey }}', '{{ result.device_id }}', 'increment')">
   <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-</button> | <button type="button" class="btn btn-danger btn-sm" onclick="decrease({{ result.apikey }}, {{ result.device_id }})">
+</button> | <button type="button" class="btn btn-danger btn-sm" onclick="callUpdate('{{ result.apikey }}', '{{ result.device_id }}', 'decrement')">
   <span class="glyphicon glyphicon-minus-sign" aria-hidden="true"></span>
 </button></td>
     </tr>

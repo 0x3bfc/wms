@@ -14,7 +14,7 @@ Including another URLconf
     2. Import the include() function: from django.conf.urls import url, include
     3. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import url
+from django.conf.urls import url, include
 from django.contrib import admin
 from app import views
 urlpatterns = [
@@ -22,5 +22,7 @@ urlpatterns = [
     url(r'^admin/', views.adminView, name='admin view'),
     url(r'^service/', views.registerService, name='Service view'),
     url(r'^device/', views.device, name="device"),
-    url(r'^test/', views.testAPI, name="test")
+    url(r'^test/', views.testAPI, name="test"),
+    url(r'^api/', include('app.api.urls', namespace='restapi')),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

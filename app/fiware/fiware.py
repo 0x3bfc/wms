@@ -126,6 +126,8 @@ class Fiware():
             #update current status
             # curl "http://130.206.126.55:7896/iot/d?k=4jggokgpepnvsb2uv4s40d0000&i=112255" -d 'cur|38' -H "Content-type: text/plain"
             header = {"Content-type": "text/plain"}
+            if currentstatus == ' ':
+                currentstatus=0
             if type == 'increment':
                 currentstatus = int(currentstatus) + 1
                 if currentstatus >= int(maximumnumber):
