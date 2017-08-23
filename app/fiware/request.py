@@ -14,4 +14,8 @@ class Request():
         return False
 
     def sendGetRequest(self, header, domain):
-        return True
+        r = requests.get(domain, headers=header)
+        if r.text:
+            return r.text
+        return False
+

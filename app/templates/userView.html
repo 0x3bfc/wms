@@ -80,7 +80,7 @@ color: #04A3ED;
 <div class="row">
 <div class="menu">
 		<div class="navbar-header">
-			<a href="#">USER</a>
+			<a href="#">USER: {{ service }}</a>
 		</div>
 
 </div>
@@ -89,207 +89,59 @@ color: #04A3ED;
 
 
 	<div class="row">
+    <br/>
+    <br/>
 
+    {% if notfound.status %}
+        <h2>{{ notfound.data }}</h2>
+        <p>Help: create a <a href="/service"> service</a>, then use it as follows <a href="#">http://localhost:8000/user?service=[YOURSERVICE]</a></p>
+    {% endif %}
+
+
+    {% if noservice.status %}
+        <h2>{{ noservice.data }}</h2>
+        <p>Help: create a <a href="/service"> service</a>, then use it as follows <a href="#">http://localhost:8000/user?service=[YOURSERVICE]</a></p>
+    {% endif %}
 <!--========== First Modal ==========-->
+        {% for d in data %}
 <article class="col-md-4 well">
-    <h3 class="page-header text-center">Start Quiz Now<br />
-        <small>multiple choice question modal</small>
+    <h3 class="page-header text-center">{{ d.name }}<br />
+        <small>Total Capacity: {{ d.maxsize }}</small>
     </h3>
+        <small><strong>Address:</strong> {{ d.address }}</small><br/>
+        <small><strong>Occupied:</strong> {{ d.current }}</small>
     <br><hr>
     <div class="text-center">
-        <a class="btn btn-success" href="#successModal" data-toggle="modal"><i class="glyphicon glyphicon-eye-open"></i> Start Quiz</a>
+        {% if d.maxsize == d.current %}
+            <a class="btn btn-danger" disabled="true" href="#successModal" data-toggle="modal">Full Capacity</a>
+        {% else %}
+        <a class="btn btn-success" href="#successModal" data-toggle="modal"><i class="glyphicon glyphicon-eye-open"></i> Show Map</a>
+        {% endif %}
     </div>
+
     <!-- Modal -->
     <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header modal-header-success">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">[ × ]</button>
-                    <h2><i class="glyphicon glyphicon-cloud"></i>   Do you feel like a cloud?</h2>
-                </div>
-                <div class="modal-body">
-                    <div class="col-md-12 radio-choices">
-                        <div class="col-md-6 col-xs-6 radio-left">
-                            <form role="form">
-                            <div class="radio">
-                                <label><input type="radio" name="opta">Option 1</label>
-                            </div>
-                            <div class="radio">
-                                <label><input type="radio" name="optb">Option 2</label>
-                            </div>
-                            <div class="radio">
-                                <label><input type="radio" name="optc">Option 3</label>
-                            </div>
-                            <div class="radio">
-                                <label><input type="radio" name="optd">Option 3</label>
-                            </div>
-                            </form>
-                        </div>
-
-                        <div class="col-md-6 col-xs-6 radio-right">
-                            <div class="radio">
-                                <label>Question goes here</label>
-                            </div>
-                            <div class="radio">
-                                <label>Question goes here</label>
-                            </div>
-                            <div class="radio">
-                                <label>Question goes here</label>
-                            </div>
-                            <div class="radio">
-                                <label>Question goes here</label>
-                            </div>
-                        </div>
-                    </div><!-- ends col-12 -->
-
-                </div><div class="clearfix"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary pull-right" data-next="modal">Next</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-</article>
-
-<!--========== Second Modal ==========-->
-<article class="col-md-4 well">
-    <h3 class="page-header text-center">Contact Form Modal<br />
-        <small>popup modal contact form</small>
-    </h3>
-    <br><hr>
-    <div class="text-center">
-        <a class="btn btn-warning" href="#warningModal" data-toggle="modal"><i class="glyphicon glyphicon-briefcase"></i> Add Contact</a>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="warningModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header modal-header-warning">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h2><i class="glyphicon glyphicon-user"></i>   Add a New Contact</h2>
-                </div>
-                <div class="modal-body">
-                    <div class="col-md-12 radio-choices">
-                        <div class="col-md-6 col-xs-6 radio-left">
-                            <form role="form" action="">
-                            <div class="radio">
-                                <label>First Name</label>
-                            </div>
-                            <div class="radio">
-                                <label>Last Name</label>
-                            </div>
-                            <div class="radio">
-                                <label>Phone</label>
-                            </div>
-                            <div class="radio">
-                                <label>Email</label>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-xs-6 radio-right">
-                            <div class="radio">
-                                <input type="text" name="opta">
-                            </div>
-                            <div class="radio">
-                                <input type="text" name="optb">
-                            </div>
-                            <div class="radio">
-                                <input type="text" name="optc">
-                            </div>
-                            <div class="radio">
-                                <input type="text" name="optd">
-                            </div>
-                            </form>
-                        </div>
-                    </div><!-- ends col-12 -->
-
-                </div><div class="clearfix"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary pull-right">Submit</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-</article>
-
-<!--========== Third Modal ==========-->
-<article class="col-md-4 well">
-    <h3 class="page-header text-center">Shopping Cart Modal<br />
-        <small>popup shopping cart modal</small>
-    </h3>
-    <br><hr>
-    <div class="text-center">
-        <a class="btn btn-primary" href="#primaryModal" data-toggle="modal"><i class="glyphicon glyphicon-shopping-cart"></i> Shopping Cart</a>
-    </div>
-    <!-- Modal -->
-    <div class="modal fade" id="primaryModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header modal-header-primary">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> [ × ] </button>
-                    <h2><i class="glyphicon glyphicon-shopping-cart"></i>   Shopping Cart Items</h2>
+                    <h2><i class="glyphicon glyphicon-cloud"></i> MAP</h2>
                 </div>
                 <div class="modal-body">
                     <div class="col-md-12">
-                      <div class="table-responsive">
-                        <form action="" method="" name="">
-                        <table class="table table-condensed"><thead>
-                        <tr>
-                        <th>Category</th>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Subtotal</th>
-                        </tr></thead>
-                        <tbody>
-                        <tr>
-                        <td>
-                        <select name='optionsA'>
-                            <option value=''>option a</option><option value=''>option b</option><option value=''>option c</option>
-                        </select>
-                        </td>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2645.9577697739874!2d-89.21424329999999!3d48.457339800000014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4d5923eaca84fa67%3A0xfd2f9f807114acd4!2s292+Shuniah+St%2C+Thunder+Bay%2C+ON+P7A+3A2!5e0!3m2!1sen!2sca!4v1424272931061" frameborder="0" style="border:0"></iframe>
 
-                        <td>
-                        <select name='products'>
-                            <option value=''>option a</option><option value=''>option b</option><option value=''>option c</option>
-                        </select>
-                        </td>
-
-                        <td>
-                        <input name="price" type="number" class="form-control" value='0.00'>
-                        </td>
-
-                        <td>
-                        <input name="" type="number" class="form-control" value='0'>
-                        </td>
-
-                        <td>
-                        <input name="" type="number" class="form-control" value='0.00'>
-                        </td>
-                        </tr>
-                        </tbody></table>
-                           <p class='grandTotal'>Total value: $<input name="" type="number" class="form-control" value='0.00'></p>
-                           <button data-bind='click: addLine'>Add product</button>
-                           <button data-bind='click: save'>Submit order</button>
-                           <a href='#' data-bind='click: $parent.removeLine'>Remove</a>
-
-                        </form>
-                      </div>
                     </div><!-- ends col-12 -->
 
                 </div><div class="clearfix"></div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger pull-left" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary pull-right" data-next="modal">Continue Shopping</button>
                 </div>
-
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 </article>
-
+        {% endfor %}
 	</div>
 </div>
 

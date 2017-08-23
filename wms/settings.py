@@ -130,4 +130,5 @@ timezone="Europe/Madrid"
 service_api = "http://%s:4041/iot/services"%(fiware_IP)
 workspace_api="http://%s:4041/iot/devices"%(fiware_IP)
 device_api="http://%s:7896/iot/d"%(fiware_IP)
+ngsi_api = "http://%s:1026/ngsi10/queryContext"%(fiware_IP)
 

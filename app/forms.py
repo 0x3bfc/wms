@@ -2,11 +2,13 @@ from django import forms
 from .models import *
 
 class RegisterForm(forms.Form):
+    iquery_choices = [(s.name, s.name) for s in Service.objects.all()]
     entity_name=forms.CharField(label="Workspace Name", widget = forms.TextInput(attrs = {"class":"form-control input-md"}))
     maxsize=forms.CharField(label="Max No. of spots", widget = forms.TextInput(attrs = {"class":"form-control input-md"}))
     location_long=forms.CharField(label="Location longitude", widget = forms.TextInput(attrs = {"class":"form-control input-md"}))
     location_lat = forms.CharField(label="Location latitude", widget=forms.TextInput(attrs={"class": "form-control input-md"}))
     address = forms.CharField(label="Address", widget=forms.TextInput(attrs={"class": "form-control input-md"}))
+    services = forms.ChoiceField(iquery_choices,label="Service Name", widget=forms.Select(attrs={'class':'form-control input-md'}))
 
     def clean(self):
         cleaned_data=super(RegisterForm,self).clean()

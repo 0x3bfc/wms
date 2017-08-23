@@ -1,18 +1,8 @@
 from __future__ import print_function
-import json, uuid
 from django.shortcuts import render,render_to_response
-from django.shortcuts import redirect
 from django.template.context_processors import csrf
 from django.template import RequestContext
-from django.http import HttpResponseRedirect
-from django.contrib.auth import logout
-from .models import *
-from django.http import HttpResponse
-from django.views.generic import CreateView, DeleteView, ListView, UpdateView
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.views.decorators.clickjacking import xframe_options_exempt
 from .forms import *
 from .models import *
 from wms import settings
@@ -51,8 +41,43 @@ def registerService(request):
 
 
 def userView(request):
-    values = {}
+    servicename = request.GET.get('service', '')
+    if servicename == '':
+        values = {'noservice':{
+                                    'data':'Please provide a service in order to use the system!',
+                                    'status':True
+                               }
+                  }
+        return render_to_response("userView.html", values, context_instance=RequestContext(request))
+    try:
+        service = Service.objects.get(name=servicename)
+
+    except:
+        values = {'notfound': {
+            'data': '%s is not found' % (servicename),
+            'status': True
+        }
+        }
+        return render_to_response("userView.html", values, context_instance=RequestContext(request))
+
+    fiware_obj = fiware.Fiware(settings.service_api, settings.workspace_api, settings.cbroker)
+    workspaces = WorkSpace.objects.filter(service=service)
+    ws = []
+    data = []
+
+    for w in workspaces:
+        ws.append(w.entity_name)
+    if len(ws) >=1:
+        data = fiware_obj.listWorkspaces(servicename, ws)
+
+        data = fiware_obj.filterData(data)
+
+        #    data = []
+
+    values = {'data':data,
+            'service': servicename}
     return render_to_response("userView.html", values, context_instance=RequestContext(request))
+
 
 
 def adminView(request):
@@ -65,9 +90,12 @@ def adminView(request):
 
     elif request.method == 'POST':
         form = RegisterForm(request.POST)
+
+
         if form.is_valid():
             fiware_obj = fiware.Fiware(settings.service_api, settings.workspace_api, settings.cbroker)
-            service = Service.objects.get(name="fiwareservice")
+            service_name = form.cleaned_data['services']
+            service = Service.objects.get(name=service_name)
             workspace = WorkSpace()
             workspace.service = service
             ws_id = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(20))

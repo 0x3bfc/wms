@@ -1,7 +1,7 @@
 from request import Request
 from wms import settings
 import random, string
-
+import json
 
 class Fiware():
     def __init__(self, serviceapi, workspaceapi, cbroker):
@@ -48,8 +48,82 @@ class Fiware():
         except:
             return False
 
-    def listWorkspaces(self):
-        return True
+    def listWorkspaces(self, service, workspaces):
+        try:
+            header = {
+                        "Content-type": "application/json",
+                        "Fiware-Service": service
+                      }
+            values = []
+            for ws in workspaces:
+                data = '{"entities": [{"type": "","id": "%s","isPattern": "false"}],"attributes": []}'%(ws)
+                r = self.requester.sendPostRequest(header, data, settings.ngsi_api)
+                val = json.loads(r)
+
+                values.append({ws: val['contextResponses'][0]['contextElement']['attributes']})
+
+            #raise Exception(values)
+            return values
+        except:
+            return False
 
     def updateDevices(self):
         return True
+
+    def filterData(self, data, currentstatus=None, address=None, lat=None, long=None, maxsize=None):
+        wss = []
+        #try:
+        for el in data:
+                for k,v in el.iteritems():
+
+                    for attr in v:
+                        #raise Exception(attr.keys()[1])
+                        if 'longitude' == attr[attr.keys()[1]]:
+                            long = attr['value']
+
+                        if 'latitude' == attr[attr.keys()[1]]:
+                            lat = attr['value']
+                        if 'maximumnumber' == attr[attr.keys()[1]]:
+                            maxsize = attr['value']
+                        if 'address' == attr[attr.keys()[1]]:
+                            address = attr['value']
+                        if 'currentstatus' == attr[attr.keys()[1]]:
+                            currentstatus = attr['value']
+                    if currentstatus == u' ':
+                        currentstatus = 0
+                    wss.append({
+                            'name':k,
+                            'long': long,
+                            'lat': lat,
+                            'maxsize':maxsize,
+                            'address':address,
+                            'current': currentstatus
+                    })
+        return wss
+        """except:
+            #raise Exception(data)
+            for k, v in data.iteritems():
+
+                for attr in v:
+                    # raise Exception(attr.keys()[1])
+                    if 'longitude' == attr[attr.keys()[1]]:
+                        long = attr['value']
+
+                    if 'latitude' == attr[attr.keys()[1]]:
+                        lat = attr['value']
+                    if 'maximumnumber' == attr[attr.keys()[1]]:
+                        maxsize = attr['value']
+                    if 'address' == attr[attr.keys()[1]]:
+                        address = attr['value']
+                    if 'currentstatus' == attr[attr.keys()[1]]:
+                        currentstatus = attr['value']
+                if currentstatus == u' ':
+                    currentstatus = 0
+                wss.append({
+                    'name': k,
+                    'long': long,
+                    'lat': lat,
+                    'maxsize': maxsize,
+                    'address': address,
+                    'current': currentstatus
+                }) """
