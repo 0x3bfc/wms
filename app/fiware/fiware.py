@@ -100,30 +100,3 @@ class Fiware():
                             'current': currentstatus
                     })
         return wss
-        """except:
-            #raise Exception(data)
-            for k, v in data.iteritems():
-
-                for attr in v:
-                    # raise Exception(attr.keys()[1])
-                    if 'longitude' == attr[attr.keys()[1]]:
-                        long = attr['value']
-
-                    if 'latitude' == attr[attr.keys()[1]]:
-                        lat = attr['value']
-                    if 'maximumnumber' == attr[attr.keys()[1]]:
-                        maxsize = attr['value']
-                    if 'address' == attr[attr.keys()[1]]:
-                        address = attr['value']
-                    if 'currentstatus' == attr[attr.keys()[1]]:
-                        currentstatus = attr['value']
-                if currentstatus == u' ':
-                    currentstatus = 0
-                wss.append({
-                    'name': k,
-                    'long': long,
-                    'lat': lat,
-                    'maxsize': maxsize,
-                    'address': address,
-                    'current': currentstatus
-                }) """

@@ -2,12 +2,12 @@ from __future__ import print_function
 from django.shortcuts import render,render_to_response
 from django.template.context_processors import csrf
 from django.template import RequestContext
-from django.views.decorators.clickjacking import xframe_options_exempt
 from .forms import *
 from .models import *
 from wms import settings
 from .fiware import fiware
 import random , string
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 def registerService(request):
     values = {}
@@ -69,10 +69,11 @@ def userView(request):
         ws.append(w.entity_name)
     if len(ws) >=1:
         data = fiware_obj.listWorkspaces(servicename, ws)
+        if not data:
+            data = []
+        else:
+            data = fiware_obj.filterData(data)
 
-        data = fiware_obj.filterData(data)
-
-        #    data = []
 
     values = {'data':data,
             'service': servicename}
@@ -132,3 +133,23 @@ def adminView(request):
         values["form"] = form
         values.update(csrf(request))
         return render_to_response("adminView.html", values, context_instance=RequestContext(request))
+
+
+
+def device(request):
+    values = {}
+    # collect api_key and device id
+    devices = []
+    for s in Service.objects.all():
+        for d in WorkSpace.objects.filter(service=s):
+            devices.append({'apikey':s.apikey, 'device_id':d.ws_id, 'workspace':d.entity_name, 'address':d.address, 'maxsize':d.maxsize})
+    paginator = Paginator(devices, 11)
+    try:
+        page = request.GET.get('page')
+        results = paginator.page(page)
+    except PageNotAnInteger:
+        results = paginator.page(1)
+    except EmptyPage:
+        results = paginator.page(paginator.num_pages)
+    values = {'results':results}
+    return render_to_response("RFID.html", values, context_instance=RequestContext(request))

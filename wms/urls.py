@@ -20,5 +20,6 @@ from app import views
 urlpatterns = [
     url(r'^user/', views.userView, name='user view'),
     url(r'^admin/', views.adminView, name='admin view'),
-    url(r'^service/', views.registerService, name='Service view')
+    url(r'^service/', views.registerService, name='Service view'),
+    url(r'^device/', views.device, name="device")
 ]
